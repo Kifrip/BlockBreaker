@@ -16,7 +16,7 @@ public class Block : MonoBehaviour
     Level level;
 
     //state variables
-    [SerializeField] int timesHit; // TODO only serialized for debug purposes
+    int timesHit;
     private void Start()
     {
         CountBreakableBlocks();

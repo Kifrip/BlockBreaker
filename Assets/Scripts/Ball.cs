@@ -9,10 +9,6 @@ public class Ball : MonoBehaviour
     [SerializeField] AudioClip[] ballSounds;
     [SerializeField] float randomFactor = 0.2f;
     [SerializeField] float maxSpeed = 15f;
-    //float ballSpeed;
-    //[SerializeField] float xVelocity;
-    //[SerializeField] float yVelocity;
-    [SerializeField] Vector2 objectVelocity;
 
     // state
     Vector2 paddleToBallVector;
@@ -38,7 +34,6 @@ public class Ball : MonoBehaviour
             LockBallToPaddle();
             LaunchOnMouseClick();
         }
-        //Debug.Log(GetBallSpeed());
     }
 
     private void LaunchOnMouseClick()
@@ -52,33 +47,26 @@ public class Ball : MonoBehaviour
 
     private void LockBallToPaddle()
     {
-        Vector2 paddlePos = new Vector2(paddle1.transform.position.x, paddle1.transform.position.y); // + paddleToBallVector.y
-        //Vector2 ballPos = new Vector2(paddlePos.x, paddlePos.y + paddleToBallVector.y);
+        Vector2 paddlePos = new Vector2(paddle1.transform.position.x, paddle1.transform.position.y);
         transform.position = paddlePos + paddleToBallVector;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Vector2 velocityTweak = new Vector2
-            (UnityEngine.Random.Range(0f, randomFactor),
-            UnityEngine.Random.Range(0f, randomFactor));
-        Vector2 roofPush = new Vector2
-            (0f,UnityEngine.Random.Range(0f, randomFactor+0.5f));
         if (hasStarted)
         {
             AudioClip clip = ballSounds[UnityEngine.Random.Range(0, ballSounds.Length)];
             myAudioSource.PlayOneShot(clip);
-            myRigidbody2D.velocity += velocityTweak;
-            //Debug.Log(GetBallSpeed());
-            if (transform.position.y >= 11.74f)
-            {
 
-                myRigidbody2D.velocity += roofPush;
-            }
-            if (myRigidbody2D.velocity.magnitude != maxSpeed)
-            {
-                myRigidbody2D.velocity = myRigidbody2D.velocity.normalized * maxSpeed;
-            }
+            LockBallMaxSpeed();
+        }
+    }
+
+    private void LockBallMaxSpeed()
+    {
+        if (myRigidbody2D.velocity.magnitude > maxSpeed)
+        {
+            myRigidbody2D.velocity = myRigidbody2D.velocity.normalized * maxSpeed;
         }
     }
 
